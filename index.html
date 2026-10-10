@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burger Prime — O melhor hambúrguer artesanal da cidade</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --laranja: #FF6B00;
+      --vermelho: #CC2200;
+      --escuro: #0F0F0F;
+      --cinza-escuro: #1A1A1A;
+      --cinza-medio: #2A2A2A;
+      --texto: #F5F0E8;
+      --texto-suave: #B0A090;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--escuro); color: var(--texto); font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15,15,15,0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,107,0,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+    }
+    .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; }
+    .logo span { color: var(--laranja); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a { color: var(--texto-suave); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    nav ul a:hover { color: var(--laranja); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse at center, rgba(204,34,0,0.12) 0%, transparent 70%);
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '🍔'; position: absolute; font-size: 30rem; opacity: 0.03;
+      top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3);
+      color: var(--laranja); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 999px; margin-bottom: 1.5rem;
+    }
+    h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; line-height: 1; letter-spacing: -2px; margin-bottom: 1rem; }
+    h1 em { font-style: normal; color: var(--laranja); }
+    .hero-sub { font-size: 1.2rem; color: var(--texto-suave); max-width: 520px; margin: 0 auto 2rem; }
+    .btn-primary {
+      display: inline-block; background: var(--laranja); color: #fff; font-weight: 700;
+      font-size: 1rem; padding: 1rem 2.5rem; border-radius: 8px; text-decoration: none;
+      transition: transform 0.2s, background 0.2s; box-shadow: 0 4px 24px rgba(255,107,0,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); background: #FF8530; }
+    .btn-outline {
+      display: inline-block; border: 2px solid rgba(255,107,0,0.5); color: var(--laranja);
+      font-weight: 700; font-size: 1rem; padding: 1rem 2.5rem; border-radius: 8px;
+      text-decoration: none; margin-left: 1rem; transition: all 0.2s;
+    }
+    .btn-outline:hover { background: rgba(255,107,0,0.1); border-color: var(--laranja); }
+
+    /* SECTION COMUM */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .section-title span { color: var(--laranja); }
+    .section-sub { color: var(--texto-suave); margin-bottom: 3rem; }
+    .divider { width: 48px; height: 4px; background: var(--laranja); border-radius: 2px; margin: 1rem 0 2rem; }
+
+    /* SOBRE */
+    #sobre { background: var(--cinza-escuro); }
+    .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .sobre-img {
+      aspect-ratio: 4/3; background: var(--cinza-medio);
+      border-radius: 16px; display: flex; align-items: center; justify-content: center;
+      font-size: 8rem; border: 1px solid rgba(255,107,0,0.1);
+    }
+    .sobre-texto p { color: var(--texto-suave); margin-bottom: 1rem; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .tag { background: rgba(255,107,0,0.1); border: 1px solid rgba(255,107,0,0.2); color: var(--laranja); padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; }
+
+    /* CARDÁPIO */
+    #cardapio { background: var(--escuro); }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .menu-card {
+      background: var(--cinza-escuro); border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;
+    }
+    .menu-card:hover { transform: translateY(-4px); border-color: rgba(255,107,0,0.3); }
+    .menu-img { height: 160px; background: var(--cinza-medio); display: flex; align-items: center; justify-content: center; font-size: 5rem; }
+    .menu-body { padding: 1.25rem; }
+    .menu-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .menu-desc { font-size: 0.85rem; color: var(--texto-suave); margin-bottom: 1rem; line-height: 1.4; }
+    .menu-footer { display: flex; align-items: center; justify-content: space-between; }
+    .menu-price { font-size: 1.3rem; font-weight: 800; color: var(--laranja); }
+    .btn-add { background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.3); color: var(--laranja); padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+    .btn-add:hover { background: var(--laranja); color: #fff; border-color: var(--laranja); }
+    .badge-novo { display: inline-block; background: var(--vermelho); color: #fff; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; }
+
+    /* HORÁRIOS */
+    #horarios { background: var(--cinza-escuro); text-align: center; }
+    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+    .info-item { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .info-icon { width: 60px; height: 60px; background: rgba(255,107,0,0.1); border: 1px solid rgba(255,107,0,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; }
+    .info-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--texto-suave); }
+    .info-value { font-size: 1rem; font-weight: 600; color: var(--texto); }
+
+    /* CONTATO */
+    #contato { background: var(--escuro); }
+    .contato-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--texto-suave); margin-bottom: 0.4rem; }
+    input, select, textarea {
+      width: 100%; background: var(--cinza-escuro); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; color: var(--texto); font-size: 0.95rem; padding: 0.75rem 1rem;
+      outline: none; transition: border-color 0.2s; font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus { border-color: rgba(255,107,0,0.5); }
+    select option { background: var(--cinza-escuro); }
+    textarea { resize: vertical; min-height: 120px; }
+    .form-btn { width: 100%; background: var(--laranja); color: #fff; border: none; font-size: 1rem; font-weight: 700; padding: 1rem; border-radius: 8px; cursor: pointer; transition: background 0.2s, transform 0.2s; margin-top: 0.5rem; }
+    .form-btn:hover { background: #FF8530; transform: translateY(-1px); }
+    .contato-info h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem; }
+    .contato-info p { color: var(--texto-suave); margin-bottom: 2rem; line-height: 1.7; }
+    .contato-detalhe { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.25rem; }
+    .contato-detalhe-icon { font-size: 1.5rem; margin-top: 0.1rem; }
+    .contato-detalhe strong { display: block; font-size: 0.85rem; color: var(--texto-suave); font-weight: 600; }
+    .contato-detalhe span { font-weight: 600; }
+
+    /* FOOTER */
+    footer {
+      background: var(--cinza-escuro); border-top: 1px solid rgba(255,255,255,0.05);
+      text-align: center; padding: 2rem;
+      color: var(--texto-suave); font-size: 0.85rem;
+    }
+    footer .logo { font-size: 1.2rem; margin-bottom: 0.5rem; display: block; }
+
+    /* RESPONSIVO */
+    @media (max-width: 768px) {
+      .sobre-grid, .contato-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .info-grid { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+      .btn-outline { margin-left: 0; margin-top: 0.75rem; }
+      .hero-btns { display: flex; flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Burger<span>Prime</span></div>
+    <ul>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#cardapio">Cardápio</a></li>
+      <li><a href="#horarios">Horários</a></li>
+      <li><a href="#contato">Pedidos</a></li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div>
+      <div class="hero-badge">🔥 Artesanal desde 2021</div>
+      <h1>O melhor <em>hambúrguer</em> artesanal da cidade</h1>
+      <p class="hero-sub">Smash burgers, ingredientes frescos e muito sabor. Venha experimentar ou faça seu pedido aqui.</p>
+      <div class="hero-btns">
+        <a href="#cardapio" class="btn-primary">Ver Cardápio</a>
+        <a href="#contato" class="btn-outline">Fazer Pedido</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+        <div class="sobre-img">🍔</div>
+        <div class="sobre-texto">
+          <div class="section-title"><span>Quem</span> somos</div>
+          <div class="divider"></div>
+          <p>A Burger Prime nasceu da paixão por hambúrgueres artesanais feitos do jeito certo: carnes frescas, pão fresquinho todos os dias e molhos exclusivos desenvolvidos pela nossa equipe.</p>
+          <p>Acreditamos que um bom hambúrguer é uma experiência completa — do cheiro ao primeiro mordida. Por isso, cada detalhe importa: a temperatura certa, o queijo derretido no ponto e aquele crunch do pickles.</p>
+          <p>Estamos em São Paulo, na Rua Augusta, 847, de terça a domingo, das 18h às 23h.</p>
+          <div class="tag-list">
+            <span class="tag">🥩 Carne fresca</span>
+            <span class="tag">🍞 Pão do dia</span>
+            <span class="tag">🫙 Molhos próprios</span>
+            <span class="tag">🌱 Opção veggie</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cardapio">
+    <div class="container">
+      <div class="section-title">Nosso <span>Cardápio</span></div>
+      <div class="divider"></div>
+      <p class="section-sub">Todos os hambúrgueres são preparados na hora com ingredientes frescos.</p>
+      <div class="menu-grid">
+        <div class="menu-card">
+          <div class="menu-img">🍔</div>
+          <div class="menu-body">
+            <div class="menu-name">Classic Burger</div>
+            <div class="menu-desc">Pão brioche levemente tostado, carne 150g, queijo cheddar americano, alface americana, tomate e molho especial da casa.</div>
+            <div class="menu-footer">
+              <span class="menu-price">R$ 25,00</span>
+              <button class="btn-add" onclick="alert('Pedido via formulário abaixo!')">Pedir</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-img">🔥</div>
+          <div class="menu-body">
+            <div class="menu-name">Double Smash <span class="badge-novo">hit</span></div>
+            <div class="menu-desc">Dois smash burgers 80g cada, queijo cheddar duplo, cebola caramelizada, pickles artesanal e molho smash exclusivo.</div>
+            <div class="menu-footer">
+              <span class="menu-price">R$ 35,00</span>
+              <button class="btn-add" onclick="alert('Pedido via formulário abaixo!')">Pedir</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-img">🌿</div>
+          <div class="menu-body">
+            <div class="menu-name">Veggie Deluxe</div>
+            <div class="menu-desc">Hambúrguer de grão-de-bico e legumes, pão integral, rúcula, tomate seco, queijo frescal e aioli de ervas.</div>
+            <div class="menu-footer">
+              <span class="menu-price">R$ 28,00</span>
+              <button class="btn-add" onclick="alert('Pedido via formulário abaixo!')">Pedir</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-img">🍟</div>
+          <div class="menu-body">
+            <div class="menu-name">Batata Frita Crocante</div>
+            <div class="menu-desc">Fritas cortadas na hora, temperadas com sal de ervas e servidas com molho mayo-sriracha.</div>
+            <div class="menu-footer">
+              <span class="menu-price">R$ 14,00</span>
+              <button class="btn-add" onclick="alert('Pedido via formulário abaixo!')">Pedir</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-img">🧅</div>
+          <div class="menu-body">
+            <div class="menu-name">Onion Rings</div>
+            <div class="menu-desc">Anéis de cebola empanados em massa especial, crocantes por fora e macios por dentro. Acompanha molho ranch.</div>
+            <div class="menu-footer">
+              <span class="menu-price">R$ 16,00</span>
+              <button class="btn-add" onclick="alert('Pedido via formulário abaixo!')">Pedir</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-card">
+          <div class="menu-img">🥤</div>
+          <div class="menu-body">
+            <div class="menu-name">Combo Prime</div>
+            <div class="menu-desc">Hambúrguer à escolha + Batata Frita Crocante + Refrigerante 350ml. A melhor escolha!</div>
+            <div class="menu-footer">
+              <span class="menu-price">R$ 42,00</span>
+              <button class="btn-add" onclick="alert('Pedido via formulário abaixo!')">Pedir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="horarios">
+    <div class="container">
+      <div class="section-title" style="text-align:center">Onde <span>Nos Encontrar</span></div>
+      <div class="divider" style="margin:1rem auto 0"></div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div class="info-label">Endereço</div>
+          <div class="info-value">Rua Augusta, 847<br>Consolação — São Paulo, SP</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">🕕</div>
+          <div class="info-label">Horário de funcionamento</div>
+          <div class="info-value">Terça a Domingo<br>18h às 23h</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📧</div>
+          <div class="info-label">Contato</div>
+          <div class="info-value">pedidos@burgerprime.com.br</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato">
+    <div class="container">
+      <div class="contato-grid">
+        <div>
+          <div class="section-title">Faça seu <span>Pedido</span></div>
+          <div class="divider"></div>
+          <form onsubmit="enviarPedido(event)">
+            <div class="form-group">
+              <label for="nome">Seu nome</label>
+              <input type="text" id="nome" placeholder="Ex: João Silva" required>
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail para confirmação</label>
+              <input type="email" id="email" placeholder="seuemail@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label for="pedido">Tipo de pedido</label>
+              <select id="pedido" required>
+                <option value="">Selecione…</option>
+                <option>Retirada no local</option>
+                <option>Reserva de mesa</option>
+                <option>Entrega (consultar área)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="msg">Mensagem / itens do pedido</label>
+              <textarea id="msg" placeholder="Ex: 2x Classic Burger, 1x Batata Frita, entregar às 20h..."></textarea>
+            </div>
+            <button type="submit" class="form-btn">Enviar Pedido 🍔</button>
+          </form>
+        </div>
+        <div class="contato-info">
+          <h3>Por que pedir <span style="color:var(--laranja)">com a gente?</span></h3>
+          <p>Cada pedido é preparado na hora, com carinho e ingredientes frescos. Você recebe a confirmação por e-mail.</p>
+          <div class="contato-detalhe">
+            <span class="contato-detalhe-icon">⚡</span>
+            <div>
+              <strong>Preparo rápido</strong>
+              <span>Prontos em até 20 minutos</span>
+            </div>
+          </div>
+          <div class="contato-detalhe">
+            <span class="contato-detalhe-icon">🥩</span>
+            <div>
+              <strong>Ingredientes frescos</strong>
+              <span>Comprados todo dia no mercado</span>
+            </div>
+          </div>
+          <div class="contato-detalhe">
+            <span class="contato-detalhe-icon">💬</span>
+            <div>
+              <strong>Confirmação por e-mail</strong>
+              <span>Você sempre sabe o status do seu pedido</span>
+            </div>
+          </div>
+          <div class="contato-detalhe">
+            <span class="contato-detalhe-icon">🎁</span>
+            <div>
+              <strong>Promoção do mês</strong>
+              <span>Combo Prime com 10% off na primeira compra</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="logo">Burger<span style="color:var(--laranja)">Prime</span></span>
+    <p>© 2026 Burger Prime. Rua Augusta, 847 — Consolação, São Paulo, SP. Terça a Domingo: 18h–23h.</p>
+    <p style="margin-top:0.4rem; font-size:0.75rem; opacity:0.5">Site criado com KanbanAI</p>
+  </footer>
+
+  <script>
+    function enviarPedido(e) {
+      e.preventDefault();
+      var nome = document.getElementById('nome').value;
+      alert('Obrigado, ' + nome + '! Seu pedido foi recebido. Você receberá a confirmação em breve por e-mail. 🍔🔥');
+      e.target.reset();
+    }
+    // Smooth scroll para links internos
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var el = document.querySelector(this.getAttribute('href'));
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+  </script>
+</body>
+</html>
